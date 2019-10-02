@@ -47,7 +47,7 @@ class Ticket(object):
         return self.__start_time_utc
 
     def __repr__(self):
-        return f"Ticket: {self.__car} was parked at {self.spot} starting {self.start_time_utc}"
+        return f"Ticket: [{self.__car}] was parked at [{self.spot}]"
 
 
 class Fare(object):
@@ -61,7 +61,7 @@ class Fare(object):
         return self.__money_to_pay
 
     def __repr__(self):
-        return f"Fare: {self.money_to_pay} for {self.__ticket}"
+        return f"Fare: [{self.money_to_pay}] for {self.__ticket}"
 
 
 class Spots(object):
@@ -145,13 +145,16 @@ class Lot(object):
                   num_regular: str = 100):
         for floor in range(int(num_floor)):
             [self.__available.add_spot(
-                Spot(self.calculate_distance(floor, x), SpotType.carpool, self.create_description(floor, x)))
+                Spot(self.calculate_distance(floor, x), SpotType.carpool,
+                     self.create_description(floor, x, SpotType.carpool)))
                 for x in range(int(num_carpool))]
             [self.__available.add_spot(
-                Spot(self.calculate_distance(floor, x), SpotType.handicap, self.create_description(floor, x)))
+                Spot(self.calculate_distance(floor, x), SpotType.handicap,
+                     self.create_description(floor, x, SpotType.handicap)))
                 for x in range(int(num_handicap))]
             [self.__available.add_spot(
-                Spot(self.calculate_distance(floor, x), SpotType.regular, self.create_description(floor, x)))
+                Spot(self.calculate_distance(floor, x), SpotType.regular,
+                     self.create_description(floor, x, SpotType.regular)))
                 for x in range(int(num_regular))]
 
     def lot_status(self):
@@ -162,8 +165,8 @@ class Lot(object):
         return position_from_entry * int(num_floor) + 1
 
     @staticmethod
-    def create_description(floor, position_from_entry):
-        return f"{floor}.{position_from_entry}.carpool.{random.randint(1, 101)}"
+    def create_description(floor, position_from_entry, spot_type):
+        return f"{floor}.{position_from_entry}.{spot_type}.{random.randint(1, 101)}"
 
     # endregion
 
